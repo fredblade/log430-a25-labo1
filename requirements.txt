@@ -1,3 +1,4 @@
+dotenv
 load_dotenv
 pytest
 pymongo

@@ -36,3 +36,10 @@ def test_user_delete():
     user_list = dao.select_all()
     emails = [u.email for u in user_list]
     assert user.email not in emails
+
+def test_user_delete_all():
+    user = User(None, 'Test User', 'test@example.com')
+    dao.insert(user)
+    dao.delete_all()
+    user_list = dao.select_all()
+    assert len(user_list) == 0
