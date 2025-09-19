@@ -7,6 +7,9 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Clean workspace
+        run: sudo rm -rf "${GITHUB_WORKSPACE}"/*
+
       - uses: actions/checkout@v4
 
       - name: Créer fichier .env 
