@@ -8,8 +8,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          clean: true
+        continue-on-error: true
 
       - name: Créer fichier .env 
         run: |
