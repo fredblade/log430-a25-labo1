@@ -19,8 +19,8 @@ jobs:
 
       - name: Installer les dependences Python
         run: |
-          python3 -m pip install -r requirements.txt
-          python3 -m pip install pytest
+          python3 -m pip install -r requirements.txt --break-system-packages
+          python3 -m pip install pytest --break-system-packages
 
       - name: Démarrer le conteneur
         run: docker compose up -d
