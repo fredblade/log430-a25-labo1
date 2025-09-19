@@ -43,8 +43,8 @@ class UserDAO:
     def update(self, user):
         """ Update given user in MySQL """
         self.cursor.execute(
-            "UPDATE users SET name = %s, email = %s WHERE name = %s",
-            (user.name, user.email, user.name)
+            "UPDATE users SET name = %s, email = %s WHERE id = %s",
+            (user.name, user.email, user.id)
         )
         self.conn.commit()
         return self.cursor.rowcount

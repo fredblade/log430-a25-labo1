@@ -1,5 +1,4 @@
-dotenv
-load_dotenv
+python-dotenv
 pytest
 pymongo
 mysql-connector-python

@@ -6,7 +6,7 @@ Auteurs : Gabriel C. Ullmann, Fabio Petrillo, 2025
 import os
 from dotenv import load_dotenv
 import mysql.connector
-from models.user import User
+from models.product import Product
 
 class ProductDAO:
     def __init__(self):
@@ -27,24 +27,45 @@ class ProductDAO:
 
     def select_all(self):
         """ Select all products from MySQL """
-        pass
+        self.cursor.execute("SELECT * FROM products")
+        rows = self.cursor.fetchall()
+        products = []
+        for row in rows:
+            product = Product(product_id=row[0], name=row[1], brand=row[2], price=row[3])
+            products.append(product)
+        return products
 
     def insert(self, product):
         """ Insert given product into MySQL """
-        pass
+        sql = "INSERT INTO products (name, brand, price) VALUES (%s, %s, %s)"
+        values = (product.name, product.brand, product.price)
+        self.cursor.execute(sql, values)
+        self.conn.commit()
+        return self.cursor.lastrowid
 
     def update(self, product):
         """ Update given product in MySQL """
-        pass
+        sql = "UPDATE products SET name = %s, brand = %s, price = %s WHERE id = %s"
+        values = (product.name, product.brand, product.price, product.id)
+        self.cursor.execute(sql, values)
+        self.conn.commit()
+        return self.cursor.rowcount
 
     def delete(self, product_id):
         """ Delete product from MySQL with given product ID """
-        pass
+        sql = "DELETE FROM products WHERE id = %s"
+        values = (product_id,)
+        self.cursor.execute(sql, values)
+        self.conn.commit()
+        return self.cursor.rowcount
 
     def delete_all(self): #optional
         """ Empty products table in MySQL """
-        pass
-        
+        sql = "DELETE FROM products"
+        self.cursor.execute(sql)
+        self.conn.commit()
+        return self.cursor.rowcount
+
     def close(self):
         self.cursor.close()
         self.conn.close()
