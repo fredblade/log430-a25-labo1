@@ -1,5 +1,6 @@
 services:
   store_manager_app:
+    container_name: store_manager_app
     build: .
     volumes:
       - .:/app
@@ -16,6 +17,7 @@ services:
       DB_PASSWORD: pass
 
   mysql:
+    container_name: mysql
     image: mysql:8
     restart: unless-stopped
     ports:
@@ -29,6 +31,7 @@ services:
       - ./db-init:/docker-entrypoint-initdb.d
 
   mongo:
+    container_name: mongo
     image: mongo:6
     restart: unless-stopped
     ports:
