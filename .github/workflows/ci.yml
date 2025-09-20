@@ -57,7 +57,7 @@ jobs:
           echo "Database initialized successfully!"
 
       - name: Exécuter test_user.py (TODO - inclure tous les tests)
-        run: docker exec store_manager_app python -m pytest -v 
+        run: docker exec store_manager_app python -m pytest
 
       - name: Déploiement
         working-directory: src
