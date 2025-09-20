@@ -29,23 +29,31 @@ jobs:
       - name: Démarrer le conteneur
         run: docker compose up -d
 
-      - name: Attendre MySQL et initialiser la base de données
+      - name: Attendre MySQL et vérifier l'initialisation
         run: |
           echo "Waiting for MySQL to be ready..."
-          timeout=60
-          until docker exec mysql mysqladmin ping -h localhost -u root -proot --silent; do
+          sleep 15
+          timeout=90
+          until docker exec mysql mysqladmin ping --silent; do
             echo "Waiting for MySQL..."
             sleep 3
             timeout=$((timeout - 3))
             if [ $timeout -le 0 ]; then
               echo "MySQL failed to start"
+              docker logs mysql
               exit 1
             fi
           done
           
-          echo "Copying and executing database initialization..."
-          docker cp db-init/init.sql mysql:/tmp/init.sql
-          docker exec mysql mysql -u root -proot mydb -e "source /tmp/init.sql"
+          echo "Waiting for database initialization to complete..."
+          sleep 10
+          
+          echo "Verifying database initialization..."
+          docker exec mysql mysql -u user -ppass -D mydb -e "SHOW TABLES;" || {
+            echo "Database not properly initialized, checking logs..."
+            docker logs mysql
+            exit 1
+          }
           echo "Database initialized successfully!"
 
       - name: Exécuter test_user.py (TODO - inclure tous les tests)
