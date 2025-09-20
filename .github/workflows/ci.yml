@@ -28,30 +28,23 @@ jobs:
 
       - name: Attendre MySQL et vérifier l'initialisation
         run: |
-          echo "Waiting for MySQL to be ready..."
           sleep 15
           timeout=90
           until docker exec mysql mysqladmin ping --silent; do
-            echo "Waiting for MySQL..."
             sleep 3
             timeout=$((timeout - 3))
             if [ $timeout -le 0 ]; then
-              echo "MySQL failed to start"
               docker logs mysql
               exit 1
             fi
           done
           
-          echo "Waiting for database initialization to complete..."
           sleep 10
           
-          echo "Verifying database initialization..."
           docker exec mysql mysql -u user -ppass -D mydb -e "SHOW TABLES;" || {
-            echo "Database not properly initialized, checking logs..."
             docker logs mysql
             exit 1
           }
-          echo "Database initialized successfully!"
 
       - name: Exécuter test_user.py (TODO - inclure tous les tests)
         run: docker exec store_manager_app python -m pytest -v
