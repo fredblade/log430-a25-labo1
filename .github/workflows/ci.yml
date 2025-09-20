@@ -29,9 +29,9 @@ jobs:
       - name: Démarrer le conteneur
         run: docker compose up -d
 
-      - name: Attendre MySQL
+      - name: Attendre MySQL et initialiser la base de données
         run: |
-          sleep 10
+          echo "Waiting for MySQL to be ready..."
           timeout=60
           until docker exec mysql mysqladmin ping -h localhost -u root -proot --silent; do
             echo "Waiting for MySQL..."
@@ -42,7 +42,10 @@ jobs:
               exit 1
             fi
           done
-          sleep 5
+          
+          echo "Executing database initialization..."
+          docker exec mysql mysql -u root -proot mydb < db-init/init.sql
+          echo "Database initialized successfully!"
 
       - name: Exécuter test_user.py (TODO - inclure tous les tests)
         working-directory: src
