@@ -14,11 +14,11 @@ jobs:
 
       - name: Créer fichier .env 
         run: |
-          echo "MYSQL_HOST=localhost" >> .env
-          echo "MONGODB_HOST=localhost" >> .env
-          echo "MYSQL_DB_NAME=mydb" >> .env
-          echo "DB_USERNAME=user" >> .env
-          echo "DB_PASSWORD=pass" >> .env
+          echo "MYSQL_HOST=${{ vars.MYSQL_HOST }}" >> .env
+          echo "MONGODB_HOST=${{ vars.MONGODB_HOST }}" >> .env
+          echo "MYSQL_DB_NAME=${{ vars.MYSQL_DB_NAME }}" >> .env
+          echo "DB_USERNAME=${{ vars.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ vars.DB_PASSWORD }}" >> .env
 
       - name: Installer les dependences Python
         working-directory: .
@@ -43,8 +43,9 @@ jobs:
             fi
           done
           
-          echo "Executing database initialization..."
-          docker exec mysql mysql -u root -proot mydb < db-init/init.sql
+          echo "Copying and executing database initialization..."
+          docker cp db-init/init.sql mysql:/tmp/init.sql
+          docker exec mysql mysql -u root -proot mydb -e "source /tmp/init.sql"
           echo "Database initialized successfully!"
 
       - name: Exécuter test_user.py (TODO - inclure tous les tests)
